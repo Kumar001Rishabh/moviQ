@@ -1,0 +1,29 @@
+# Node modules (VERY important)
+node_modules/
+
+# Environment variables (secrets)
+.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+
+# Build / temp files
+dist/
+build/
+.tmp/
+.cache/
+
+# Optional: ignore uploads if your app stores files
+uploads/
