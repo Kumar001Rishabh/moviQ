@@ -1,16 +1,19 @@
-import ApiError from "../utils/apiError";
+import ApiError from "../utils/apiError.js";
 import { verifyAccessToken } from '../utils/jwt.utils.js';
 
 const authMiddleware = (req, res, next) => {
     try {
-        let token = req?.headers?.authorization.split(" ")[1];
-        if (!token || !token.startsWith("Bearer ")) {
-            throw ApiError.unauthorized("token is missing")
+        const authHeader = req.headers.authorization;
+
+        if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            throw ApiError.unauthorized("token is missing");
         }
 
+        const token = authHeader.split(" ")[1];
         const decoded = verifyAccessToken(token);
 
         req.user = decoded;
+        console.log("i was here")
         next();
 
     } catch (error) {
