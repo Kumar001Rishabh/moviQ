@@ -111,9 +111,12 @@
 
               const res = await fetch(`/${id}/${name}`, { method: "PUT" });
               const data = await res.json();
+              console.log(data, " data ")
 
               if (data.error) {
                 alert("FAILED! Couldn't book! already booked.");
+              } else if (data.success === false) {
+                alert("FAILED! Login First");
               } else {
                 alert("Booked successfully!");
                 // Visually transition to booked state upon success

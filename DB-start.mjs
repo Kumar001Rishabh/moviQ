@@ -9,9 +9,7 @@ const setupDatabase = async () => {
         console.log("Database tables created successfully!");
     } catch (err) {
         console.error("Error creating tables:", err);
-    } finally {
-        process.exit();
     }
 };
 
-setupDatabase();
+export default setupDatabase;

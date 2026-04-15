@@ -11,6 +11,9 @@ import pg from "pg";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
+import setupDatabase from "./DB-start.mjs";
+import authRoutes from "./src/modules/auth/auth.routes.js";
+import authenticate from "./src/common/middlewares/auth.middleware.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -34,6 +37,9 @@ export const pool = new pg.Pool({
 const app = new express();
 app.use(cors());
 
+app.use("/api/auth", authRoutes);
+
+
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
@@ -45,7 +51,7 @@ app.get("/seats", async (req, res) => {
 
 //book a seat give the seatId and your name
 
-app.put("/:id/:name", async (req, res) => {
+app.put("/:id/:name", authenticate , async (req, res) => {
   try {
     const id = req.params.id;
     const name = req.params.name;
@@ -83,4 +89,29 @@ app.put("/:id/:name", async (req, res) => {
   }
 });
 
-app.listen(port, () => console.log("Server starting on port: " + port));
+// global error handler
+
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  console.log("this workied")
+  res.status(statusCode).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+  });
+});
+
+
+
+async function startServer() {
+  try {
+    await setupDatabase();
+    app.listen(port, () =>
+      console.log("Server starting on port: " + port)
+    );
+  } catch (err) {
+    console.error("Failed to start server:", err.message);
+    process.exit(1);
+  }
+}
+
+startServer();
